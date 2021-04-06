@@ -148,22 +148,26 @@ if __name__ == "__main__":
                 for site in sites:
                     print(f"[{x}] {site.info()}")
                     x+=1
-                print('Choose the number for detial search or "exit" or "back" ')
+                print('Choose the number for detail search or "exit" or "back" ')
                 inp2=input()
                 if inp2=="back":
                     break
                 elif inp2=="exit":
                     quit()
                 else:
-                    #try:
-                    num=int(inp2)
-                    data=get_nearby_places(sites[num-1])['searchResults']
-                    print(f'Places near {sites[num-1].name}:')
+                    try:
+                        num=int(inp2)
+                        try:
+                            data=get_nearby_places(sites[num-1])['searchResults']
+                            print(f'Places near {sites[num-1].name}:')
+                            for i in data:
+                                print(f"- {i['name']} ({i['fields'].get('group_sic_code_name','no category')}): {i['fields'].get('address','no address')}, {i['fields'].get('state','no state')} {i['fields'].get('postal_code','no postal code')}")
                     
-                    for i in data:
-                        print(f"- {i['name']} ({i['fields'].get('group_sic_code_name','no category')}): {i['fields'].get('address','no address')}, {i['fields'].get('state','no state')}")
-                    #except:
-                        #print('[Error} Invalid input')
+                        except:
+                            print('No places nearby')
+                            
+                    except:
+                        print('[Error} Invalid input')
 
         elif inp=="exit":
             break
