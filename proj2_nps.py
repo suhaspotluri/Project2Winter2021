@@ -8,7 +8,6 @@ import requests
 import json
 import secrets # file that contains your API key
 
-
 class NationalSite:
     '''a national site
 
@@ -122,12 +121,19 @@ def get_nearby_places(site_object):
     dict
         a converted API return from MapQuest API
     '''
-    pass
-
-
+    radius=10
+    maxMatches=10
+    ambiguities="ignore"
+    outFormat="json"
+    params={'radius':radius,'maxMatches':maxMatches,'ambiguities':ambiguities,'outFormat':outFormat,'key':secrets.API_KEY,"origin":site_object.address}
+    print(params)
+    r=requests.get("http://www.mapquestapi.com/search/v2/radius",params=params)
+    results=r.json()
+    return results
+get_nearby_places(get_site_instance("https://www.nps.gov/slbe/index.htm"))
 if __name__ == "__main__":
     states=build_state_url_dict()
-    run=True
+    run=False
     while run:
         inp=input('Enter a state name or "exit": \n').lower()
         if inp in states:
