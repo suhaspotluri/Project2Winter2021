@@ -126,14 +126,14 @@ def get_nearby_places(site_object):
     ambiguities="ignore"
     outFormat="json"
     params={'radius':radius,'maxMatches':maxMatches,'ambiguities':ambiguities,'outFormat':outFormat,'key':secrets.API_KEY,"origin":site_object.address}
-    print(params)
     r=requests.get("http://www.mapquestapi.com/search/v2/radius",params=params)
     results=r.json()
     return results
-get_nearby_places(get_site_instance("https://www.nps.gov/slbe/index.htm"))
+
+
 if __name__ == "__main__":
     states=build_state_url_dict()
-    run=False
+    run=True
     while run:
         inp=input('Enter a state name or "exit": \n').lower()
         if inp in states:
@@ -141,10 +141,30 @@ if __name__ == "__main__":
             print("--------------------------------------------")
             print("List of national sites in "+inp.capitalize())
             print("--------------------------------------------")
-            x=1
-            for site in sites:
-                print(f"[{x}] {site.info()}")
-                x+=1
+            
+            run2=True
+            while run2:
+                x=1
+                for site in sites:
+                    print(f"[{x}] {site.info()}")
+                    x+=1
+                print('Choose the number for detial search or "exit" or "back" ')
+                inp2=input()
+                if inp2=="back":
+                    break
+                elif inp2=="exit":
+                    quit()
+                else:
+                    #try:
+                    num=int(inp2)
+                    data=get_nearby_places(sites[num-1])['searchResults']
+                    print(f'Places near {sites[num-1].name}:')
+                    
+                    for i in data:
+                        print(f"- {i['name']} ({i['fields'].get('group_sic_code_name','no category')}): {i['fields'].get('address','no address')}, {i['fields'].get('state','no state')}")
+                    #except:
+                        #print('[Error} Invalid input')
+
         elif inp=="exit":
             break
         else:
